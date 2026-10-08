@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ledger-fpa"
+version = "0.1.0"
+description = "Sistema de contabilidade e FP&A em Python: lançamentos, conciliação bancária, DRE e orçamento."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+    { name = "Gary Rainer Chumacero Vanderlei" },
+]
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
