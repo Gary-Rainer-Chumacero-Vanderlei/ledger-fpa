@@ -1,4 +1,5 @@
 import pytest
+
 from ledger_fpa.domain.conta_contabil import ContaContabil, Natureza, TipoConta
 
 
