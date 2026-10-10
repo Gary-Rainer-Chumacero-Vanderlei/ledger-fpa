@@ -1,9 +1,9 @@
 from decimal import Decimal
 
 import pytest
-from ledger_fpa.domain.partida_lancamento import PartidaLancamento, TipoPartida
 
 from ledger_fpa.domain.conta_contabil import ContaContabil, Natureza, TipoConta
+from ledger_fpa.domain.partida_lancamento import PartidaLancamento, TipoPartida
 
 
 def _conta(tipo=TipoConta.ANALITICA):
