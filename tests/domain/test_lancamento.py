@@ -2,9 +2,9 @@ from datetime import date
 from decimal import Decimal
 
 import pytest
-from ledger_fpa.domain.lancamento import Lancamento
 
 from ledger_fpa.domain.conta_contabil import ContaContabil, Natureza, TipoConta
+from ledger_fpa.domain.lancamento import Lancamento
 from ledger_fpa.domain.partida_lancamento import PartidaLancamento, TipoPartida
 
 
