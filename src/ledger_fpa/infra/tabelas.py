@@ -1,7 +1,17 @@
-from sqlalchemy import Enum, ForeignKey, String, UniqueConstraint
+from datetime import date
+
+from sqlalchemy import (
+    CheckConstraint,
+    Date,
+    Enum,
+    ForeignKey,
+    String,
+    UniqueConstraint,
+)
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from ledger_fpa.domain.conta_contabil import Natureza, TipoConta
+from ledger_fpa.domain.partida_lancamento import TipoPartida
 
 
 class Base(DeclarativeBase):
@@ -27,3 +37,25 @@ class ContaContabilTabela(Base):
     nome: Mapped[str] = mapped_column(String(200))
     natureza: Mapped[Natureza] = mapped_column(Enum(Natureza))
     tipo: Mapped[TipoConta] = mapped_column(Enum(TipoConta))
+
+
+class LancamentoTabela(Base):
+    __tablename__ = "lancamento"
+    __table_args__ = (UniqueConstraint("empresa_id", "lote"),)
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    empresa_id: Mapped[int] = mapped_column(ForeignKey("empresa.id"))
+    data: Mapped[date] = mapped_column(Date)
+    lote: Mapped[int]
+    historico: Mapped[str] = mapped_column(String(500))
+
+
+class PartidaLancamentoTabela(Base):
+    __tablename__ = "partida_lancamento"
+    __table_args__ = (CheckConstraint("valor_centavos > 0"),)
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    lancamento_id: Mapped[int] = mapped_column(ForeignKey("lancamento.id"))
+    conta_id: Mapped[int] = mapped_column(ForeignKey("conta_contabil.id"))
+    tipo: Mapped[TipoPartida] = mapped_column(Enum(TipoPartida))
+    valor_centavos: Mapped[int]
