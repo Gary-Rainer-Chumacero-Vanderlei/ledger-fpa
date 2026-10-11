@@ -12,7 +12,9 @@ license = { text = "MIT" }
 authors = [
     { name = "Gary Rainer Chumacero Vanderlei" },
 ]
-dependencies = []
+dependencies = [
+    "SQLAlchemy>=2.0,<3",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]
