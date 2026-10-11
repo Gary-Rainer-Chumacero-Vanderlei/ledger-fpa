@@ -14,3 +14,9 @@ O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e 
 - Workflow de CI no GitHub Actions
 - ADR 0001: uso de SQLite no início do projeto
 - Documentação de instalação, desenvolvimento e estrutura no README
+- Diagrama do modelo de dados (`docs/modelo-dados.md`)
+- Modelo de domínio `Empresa`, com validação e normalização do CNPJ
+- Modelo de domínio `ContaContabil`, com natureza, tipo e hierarquia por código
+- Modelo de domínio `PartidaLancamento`, com valor em `Decimal` positivo e conta analítica
+- Modelo de domínio `Lancamento`, com validação da partida dobrada (débitos iguais a créditos)
+- Testes automatizados dos modelos de domínio (35 testes)
