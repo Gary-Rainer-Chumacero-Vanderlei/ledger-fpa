@@ -1,6 +1,7 @@
 from decimal import Decimal
 
 import pytest
+
 from ledger_fpa.infra.dinheiro import de_centavos, para_centavos
 
 
