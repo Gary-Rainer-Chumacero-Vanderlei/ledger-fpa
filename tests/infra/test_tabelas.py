@@ -1,11 +1,11 @@
 import pytest
-from ledger_fpa.infra.banco import criar_engine
-from ledger_fpa.infra.tabelas import Base, ContaContabilTabela, EmpresaTabela
 from sqlalchemy import inspect, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from ledger_fpa.domain.conta_contabil import Natureza, TipoConta
+from ledger_fpa.infra.banco import criar_engine
+from ledger_fpa.infra.tabelas import Base, ContaContabilTabela, EmpresaTabela
 
 
 @pytest.fixture
