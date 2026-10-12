@@ -24,7 +24,8 @@ class ContaContabil:
     """Conta do plano de contas.
 
     O código é formado por grupos numéricos separados por ponto, como
-    1.1.01.001. Apenas contas analíticas aceitam lançamentos.
+    1.1.01.001. Quando há conta pai, o código descende do código do pai
+    (1.1.01.001 sob 1.1.01). Apenas contas analíticas aceitam lançamentos.
     """
 
     codigo: str
@@ -40,6 +41,11 @@ class ContaContabil:
 
         if not _CODIGO_VALIDO.fullmatch(self.codigo):
             raise ValueError("O código deve ter grupos numéricos separados por ponto.")
+
+        if self.codigo_pai is not None and not self.codigo.startswith(
+            f"{self.codigo_pai}."
+        ):
+            raise ValueError("O código da conta deve descender do código do pai.")
 
         object.__setattr__(self, "nome", nome)
 

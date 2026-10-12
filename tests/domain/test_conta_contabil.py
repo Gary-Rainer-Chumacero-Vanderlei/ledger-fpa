@@ -69,3 +69,18 @@ def test_conta_sintetica_nao_aceita_lancamento():
     conta = _conta(tipo=TipoConta.SINTETICA)
 
     assert conta.aceita_lancamento is False
+
+
+def test_rejeita_codigo_que_nao_descende_do_pai():
+    with pytest.raises(ValueError):
+        _conta(codigo="2.1.01.001", codigo_pai="1.1.01")
+
+
+def test_rejeita_codigo_igual_ao_do_pai():
+    with pytest.raises(ValueError):
+        _conta(codigo="1.1.01", codigo_pai="1.1.01")
+
+
+def test_rejeita_pai_que_so_compartilha_prefixo_de_texto():
+    with pytest.raises(ValueError):
+        _conta(codigo="1.10.01", codigo_pai="1.1")
