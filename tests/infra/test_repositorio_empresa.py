@@ -1,12 +1,12 @@
 import pytest
-from ledger_fpa.infra.repositorio_empresa import (
-    CnpjJaCadastrado,
-    RepositorioEmpresa,
-)
 from sqlalchemy.orm import Session
 
 from ledger_fpa.domain.empresa import Empresa
 from ledger_fpa.infra.banco import criar_engine
+from ledger_fpa.infra.repositorio_empresa import (
+    CnpjJaCadastrado,
+    RepositorioEmpresa,
+)
 from ledger_fpa.infra.tabelas import Base
 
 
