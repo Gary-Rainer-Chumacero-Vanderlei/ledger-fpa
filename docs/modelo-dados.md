@@ -57,4 +57,7 @@ erDiagram
 - O lote do lançamento é único dentro de cada empresa.
 - O valor da partida (`valor_centavos`) deve ser maior que zero.
 - A regra de débitos iguais a créditos é verificada no domínio, e não no banco.
+- O CNPJ deve ter dígitos verificadores corretos (módulo 11, inclusive no formato alfanumérico). A regra é verificada no domínio.
+- O código da conta descende do código do pai (`1.1.01.001` sob `1.1.01`). A regra é verificada no domínio.
+- O pai de uma conta deve ser sintético. A regra é verificada no repositório, que consulta o tipo do pai.
 - Fora deste modelo: fechamento de período (M4), importação OFX (M5) e usuários (M8).
