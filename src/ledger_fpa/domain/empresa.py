@@ -1,8 +1,9 @@
 import re
 from dataclasses import dataclass
 
+from ledger_fpa.domain.cnpj import cnpj_valido
+
 _CNPJ_SEPARADORES = re.compile(r"[./-]")
-_CNPJ_VALIDO = re.compile(r"[0-9A-Z]{14}")
 
 
 @dataclass(frozen=True)
@@ -10,7 +11,7 @@ class Empresa:
     """Empresa titular da contabilidade.
 
     O CNPJ é normalizado (sem pontuação, em maiúsculas) e deve ter 14
-    caracteres alfanuméricos. Os dígitos verificadores não são validados.
+    caracteres alfanuméricos, com os dígitos verificadores corretos.
     """
 
     razao_social: str
@@ -22,8 +23,8 @@ class Empresa:
             raise ValueError("A razão social não pode ser vazia.")
 
         cnpj = _CNPJ_SEPARADORES.sub("", self.cnpj).upper()
-        if not _CNPJ_VALIDO.fullmatch(cnpj):
-            raise ValueError("O CNPJ deve ter 14 caracteres alfanuméricos.")
+        if not cnpj_valido(cnpj):
+            raise ValueError("O CNPJ é inválido.")
 
         object.__setattr__(self, "razao_social", razao_social)
         object.__setattr__(self, "cnpj", cnpj)
