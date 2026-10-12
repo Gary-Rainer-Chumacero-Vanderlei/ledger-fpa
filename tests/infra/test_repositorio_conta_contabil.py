@@ -8,6 +8,7 @@ from ledger_fpa.infra.repositorio_conta_contabil import (
     CodigoContaJaCadastrado,
     ContaPaiInexistente,
     EmpresaInexistente,
+    PaiNaoSintetico,
     RepositorioContaContabil,
 )
 from ledger_fpa.infra.repositorio_empresa import RepositorioEmpresa
@@ -181,3 +182,21 @@ def test_lista_vazia_quando_nao_ha_contas(sessao):
     repositorio = RepositorioContaContabil(sessao, _nova_empresa(sessao))
 
     assert repositorio.listar() == []
+
+
+def test_rejeita_conta_pai_analitica(sessao):
+    repositorio = RepositorioContaContabil(sessao, _nova_empresa(sessao))
+    repositorio.adicionar(_conta(codigo="1.1.01", nome="Caixa"))
+
+    with pytest.raises(PaiNaoSintetico):
+        repositorio.adicionar(_conta(codigo_pai="1.1.01"))
+
+
+def test_conta_nao_e_gravada_quando_o_pai_e_analitico(sessao):
+    repositorio = RepositorioContaContabil(sessao, _nova_empresa(sessao))
+    repositorio.adicionar(_conta(codigo="1.1.01", nome="Caixa"))
+
+    with pytest.raises(PaiNaoSintetico):
+        repositorio.adicionar(_conta(codigo_pai="1.1.01"))
+
+    assert repositorio.buscar_por_codigo("1.1.01.001") is None
