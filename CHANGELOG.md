@@ -25,3 +25,9 @@ O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e 
 - Conversão entre `Decimal` e centavos (`infra/dinheiro.py`)
 - Tabelas `empresa`, `conta_contabil`, `lancamento` e `partida_lancamento`, com chaves estrangeiras, unicidade de CNPJ, de código de conta e de lote por empresa, e valor positivo
 - Testes das tabelas com SQLite em memória (64 testes no total)
+- Validação dos dígitos verificadores do CNPJ, com suporte ao formato alfanumérico (`domain/cnpj.py`)
+- A `Empresa` passa a exigir CNPJ com dígitos verificadores corretos
+- A `ContaContabil` passa a exigir que o código descenda do código do pai
+- Repositório de empresas (`RepositorioEmpresa`), que recusa CNPJ duplicado
+- Repositório de contas contábeis (`RepositorioContaContabil`), isolado por empresa, que recusa código duplicado, conta pai inexistente e conta pai que não seja sintética
+- Testes da validação do CNPJ e dos repositórios, com SQLite em memória (109 testes no total)
