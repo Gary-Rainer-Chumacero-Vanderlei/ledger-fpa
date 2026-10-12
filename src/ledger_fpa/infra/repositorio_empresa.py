@@ -1,5 +1,4 @@
 from sqlalchemy import select
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from ledger_fpa.domain.empresa import Empresa
@@ -17,15 +16,16 @@ class RepositorioEmpresa:
         self._sessao = sessao
 
     def adicionar(self, empresa: Empresa) -> int:
-        """Grava a empresa e devolve o id gerado pelo banco."""
+        """Grava a empresa e devolve o id gerado pelo banco.
+
+        O CNPJ é verificado antes de gravar, sem descartar a sessão.
+        """
+        if self._buscar_tabela(empresa.cnpj) is not None:
+            raise CnpjJaCadastrado(empresa.cnpj)
+
         tabela = EmpresaTabela(razao_social=empresa.razao_social, cnpj=empresa.cnpj)
         self._sessao.add(tabela)
-
-        try:
-            self._sessao.flush()
-        except IntegrityError as erro:
-            self._sessao.rollback()
-            raise CnpjJaCadastrado(empresa.cnpj) from erro
+        self._sessao.flush()
 
         return tabela.id
 
@@ -34,9 +34,12 @@ class RepositorioEmpresa:
         return _para_dominio(tabela) if tabela else None
 
     def buscar_por_cnpj(self, cnpj: str) -> Empresa | None:
-        consulta = select(EmpresaTabela).where(EmpresaTabela.cnpj == cnpj)
-        tabela = self._sessao.scalars(consulta).first()
+        tabela = self._buscar_tabela(cnpj)
         return _para_dominio(tabela) if tabela else None
+
+    def _buscar_tabela(self, cnpj: str) -> EmpresaTabela | None:
+        consulta = select(EmpresaTabela).where(EmpresaTabela.cnpj == cnpj)
+        return self._sessao.scalars(consulta).first()
 
     def listar(self) -> list[Empresa]:
         consulta = select(EmpresaTabela).order_by(EmpresaTabela.razao_social)
