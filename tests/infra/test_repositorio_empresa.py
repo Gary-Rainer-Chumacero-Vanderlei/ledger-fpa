@@ -78,15 +78,15 @@ def test_repositorio_continua_utilizavel_apos_cnpj_duplicado(sessao):
     with pytest.raises(CnpjJaCadastrado):
         repositorio.adicionar(_empresa(razao_social="Outra Ltda"))
 
-    empresa_id = repositorio.adicionar(_empresa(cnpj="98.765.432/0001-00"))
+    empresa_id = repositorio.adicionar(_empresa(cnpj="98.765.432/0001-98"))
 
     assert isinstance(empresa_id, int)
 
 
 def test_lista_empresas_ordenadas_por_razao_social(sessao):
     repositorio = RepositorioEmpresa(sessao)
-    repositorio.adicionar(_empresa(razao_social="Zeta Ltda", cnpj="11111111000111"))
-    repositorio.adicionar(_empresa(razao_social="Alfa Ltda", cnpj="22222222000122"))
+    repositorio.adicionar(_empresa(razao_social="Zeta Ltda", cnpj="11111111000191"))
+    repositorio.adicionar(_empresa(razao_social="Alfa Ltda", cnpj="22222222000191"))
 
     empresas = repositorio.listar()
 
@@ -101,11 +101,11 @@ def test_lista_vazia_quando_nao_ha_empresas(sessao):
 
 def test_erro_de_cnpj_duplicado_nao_descarta_o_trabalho_anterior(sessao):
     repositorio = RepositorioEmpresa(sessao)
-    repositorio.adicionar(_empresa(cnpj="11111111000111"))
-    repositorio.adicionar(_empresa(cnpj="22222222000122"))
+    repositorio.adicionar(_empresa(cnpj="11111111000191"))
+    repositorio.adicionar(_empresa(cnpj="22222222000191"))
 
     with pytest.raises(CnpjJaCadastrado):
-        repositorio.adicionar(_empresa(cnpj="22222222000122"))
+        repositorio.adicionar(_empresa(cnpj="22222222000191"))
 
-    assert repositorio.buscar_por_cnpj("11111111000111") is not None
-    assert repositorio.buscar_por_cnpj("22222222000122") is not None
+    assert repositorio.buscar_por_cnpj("11111111000191") is not None
+    assert repositorio.buscar_por_cnpj("22222222000191") is not None

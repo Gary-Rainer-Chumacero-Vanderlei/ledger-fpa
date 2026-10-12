@@ -21,9 +21,9 @@ def test_rejeita_razao_social_so_com_espacos():
 
 
 def test_normaliza_cnpj_para_maiusculas():
-    empresa = Empresa(razao_social="Exemplo Ltda", cnpj="ab.cde.fgh/0001-12")
+    empresa = Empresa(razao_social="Exemplo Ltda", cnpj="ab.cde.fgh/0001-95")
 
-    assert empresa.cnpj == "ABCDEFGH000112"
+    assert empresa.cnpj == "ABCDEFGH000195"
 
 
 def test_rejeita_cnpj_com_tamanho_invalido():
