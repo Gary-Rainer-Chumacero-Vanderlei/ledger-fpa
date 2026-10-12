@@ -97,3 +97,15 @@ def test_lista_vazia_quando_nao_ha_empresas(sessao):
     repositorio = RepositorioEmpresa(sessao)
 
     assert repositorio.listar() == []
+
+
+def test_erro_de_cnpj_duplicado_nao_descarta_o_trabalho_anterior(sessao):
+    repositorio = RepositorioEmpresa(sessao)
+    repositorio.adicionar(_empresa(cnpj="11111111000111"))
+    repositorio.adicionar(_empresa(cnpj="22222222000122"))
+
+    with pytest.raises(CnpjJaCadastrado):
+        repositorio.adicionar(_empresa(cnpj="22222222000122"))
+
+    assert repositorio.buscar_por_cnpj("11111111000111") is not None
+    assert repositorio.buscar_por_cnpj("22222222000122") is not None
