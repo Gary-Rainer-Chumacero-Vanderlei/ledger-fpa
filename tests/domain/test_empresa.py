@@ -34,3 +34,14 @@ def test_rejeita_cnpj_com_tamanho_invalido():
 def test_rejeita_cnpj_com_caracteres_invalidos():
     with pytest.raises(ValueError):
         Empresa(razao_social="Exemplo Ltda", cnpj="12.345.678/00@1-95")
+
+
+def test_rejeita_cnpj_com_digito_verificador_invalido():
+    with pytest.raises(ValueError):
+        Empresa(razao_social="Exemplo Ltda", cnpj="12.345.678/0001-96")
+
+
+def test_aceita_cnpj_alfanumerico_valido():
+    empresa = Empresa(razao_social="Exemplo Ltda", cnpj="12.ABC.345/01DE-35")
+
+    assert empresa.cnpj == "12ABC34501DE35"
