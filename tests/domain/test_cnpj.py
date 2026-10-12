@@ -1,4 +1,5 @@
 import pytest
+
 from ledger_fpa.domain.cnpj import cnpj_valido
 
 
