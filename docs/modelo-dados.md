@@ -41,7 +41,7 @@ erDiagram
         int lancamento_id FK
         int conta_id FK
         string tipo
-        decimal valor
+        int valor_centavos
     }
 ```
 
@@ -51,5 +51,10 @@ erDiagram
 - Lançamentos só podem usar contas **analíticas**. Essa regra fica no domínio, com testes.
 - Em cada lançamento, a soma dos débitos deve ser igual à soma dos créditos.
 - Um lançamento tem ao menos uma partida de débito e uma de crédito.
-- Valores monetários usam `Decimal`, armazenados com 2 casas decimais.
+- No domínio, valores monetários usam `Decimal`. No banco, são guardados em centavos (inteiro), conforme o [ADR 0002](adr/0002-guardar-valores-em-centavos.md).
 - Fora do M1: fechamento de período (M4), importação OFX (M5) e usuários (M8).
+- O CNPJ da empresa é único.
+- O código da conta é único dentro de cada empresa.
+- O lote do lançamento é único dentro de cada empresa.
+- O valor da partida (`valor_centavos`) deve ser maior que zero.
+- A regra de débitos iguais a créditos é verificada no domínio, e não no banco.
