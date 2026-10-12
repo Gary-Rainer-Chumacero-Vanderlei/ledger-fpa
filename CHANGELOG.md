@@ -20,3 +20,8 @@ O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e 
 - Modelo de domínio `PartidaLancamento`, com valor em `Decimal` positivo e conta analítica
 - Modelo de domínio `Lancamento`, com validação da partida dobrada (débitos iguais a créditos)
 - Testes automatizados dos modelos de domínio (35 testes)
+- Dependência SQLAlchemy 2.x para a persistência
+- ADR 0002: valores monetários guardados em centavos no banco
+- Conversão entre `Decimal` e centavos (`infra/dinheiro.py`)
+- Tabelas `empresa`, `conta_contabil`, `lancamento` e `partida_lancamento`, com chaves estrangeiras, unicidade de CNPJ, de código de conta e de lote por empresa, e valor positivo
+- Testes das tabelas com SQLite em memória (64 testes no total)
