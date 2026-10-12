@@ -2,7 +2,7 @@
 
 Sistema de contabilidade e FP&A em Python: lançamentos, conciliação bancária, DRE e orçamento.
 
-> **Status:** em desenvolvimento inicial (v0.1.0). Os modelos de domínio da contabilidade estão implementados e testados. Persistência e interface ainda não existem.
+> **Status:** em desenvolvimento inicial (v0.1.0). Os modelos de domínio e as tabelas do banco estão implementados e testados. Repositórios e interface ainda não existem.
 
 ## Funcionalidades planejadas
 
@@ -59,7 +59,7 @@ Todo trabalho é feito em uma branch e integrado por Pull Request. A `main` é p
 ledger-fpa/
 ├── src/ledger_fpa/     # código-fonte
 │   ├── domain/         # regras de negócio (empresa, conta, lançamento)
-│   ├── infra/          # banco de dados e arquivos
+│   ├── infra/          # tabelas do banco e conversão de valores
 │   └── ui/             # telas
 ├── tests/              # testes automatizados
 ├── docs/adr/           # decisões de arquitetura
@@ -68,7 +68,7 @@ ledger-fpa/
 
 O modelo de dados está documentado em [docs/modelo-dados.md](docs/modelo-dados.md).
 
-Decisões técnicas ficam registradas em [docs/adr](docs/adr). A primeira é o [ADR 0001: usar SQLite no início do projeto](docs/adr/0001-usar-sqlite-no-inicio.md).
+Decisões técnicas ficam registradas em [docs/adr](docs/adr): o [ADR 0001](docs/adr/0001-usar-sqlite-no-inicio.md) trata do uso de SQLite, e o [ADR 0002](docs/adr/0002-guardar-valores-em-centavos.md) do armazenamento de valores em centavos.
 
 ## Licença
 
