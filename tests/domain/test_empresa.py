@@ -21,9 +21,9 @@ def test_rejeita_razao_social_so_com_espacos():
 
 
 def test_normaliza_cnpj_para_maiusculas():
-    empresa = Empresa(razao_social="Exemplo Ltda", cnpj="ab.cde.fgh/0001-12")
+    empresa = Empresa(razao_social="Exemplo Ltda", cnpj="ab.cde.fgh/0001-95")
 
-    assert empresa.cnpj == "ABCDEFGH000112"
+    assert empresa.cnpj == "ABCDEFGH000195"
 
 
 def test_rejeita_cnpj_com_tamanho_invalido():
@@ -34,3 +34,14 @@ def test_rejeita_cnpj_com_tamanho_invalido():
 def test_rejeita_cnpj_com_caracteres_invalidos():
     with pytest.raises(ValueError):
         Empresa(razao_social="Exemplo Ltda", cnpj="12.345.678/00@1-95")
+
+
+def test_rejeita_cnpj_com_digito_verificador_invalido():
+    with pytest.raises(ValueError):
+        Empresa(razao_social="Exemplo Ltda", cnpj="12.345.678/0001-96")
+
+
+def test_aceita_cnpj_alfanumerico_valido():
+    empresa = Empresa(razao_social="Exemplo Ltda", cnpj="12.ABC.345/01DE-35")
+
+    assert empresa.cnpj == "12ABC34501DE35"

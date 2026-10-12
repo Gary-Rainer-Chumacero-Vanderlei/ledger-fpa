@@ -104,7 +104,7 @@ def test_rejeita_conta_pai_inexistente(sessao):
 def test_rejeita_conta_pai_de_outra_empresa(sessao):
     repositorio_a = RepositorioContaContabil(sessao, _nova_empresa(sessao))
     repositorio_b = RepositorioContaContabil(
-        sessao, _nova_empresa(sessao, cnpj="98765432000100")
+        sessao, _nova_empresa(sessao, cnpj="98765432000198")
     )
     repositorio_a.adicionar(
         _conta(codigo="1.1.01", nome="Caixa", tipo=TipoConta.SINTETICA)
@@ -124,7 +124,7 @@ def test_rejeita_empresa_inexistente(sessao):
 def test_aceita_mesmo_codigo_em_empresas_diferentes(sessao):
     repositorio_a = RepositorioContaContabil(sessao, _nova_empresa(sessao))
     repositorio_b = RepositorioContaContabil(
-        sessao, _nova_empresa(sessao, cnpj="98765432000100")
+        sessao, _nova_empresa(sessao, cnpj="98765432000198")
     )
     repositorio_a.adicionar(_conta())
 
@@ -136,7 +136,7 @@ def test_aceita_mesmo_codigo_em_empresas_diferentes(sessao):
 def test_busca_nao_enxerga_contas_de_outra_empresa(sessao):
     repositorio_a = RepositorioContaContabil(sessao, _nova_empresa(sessao))
     repositorio_b = RepositorioContaContabil(
-        sessao, _nova_empresa(sessao, cnpj="98765432000100")
+        sessao, _nova_empresa(sessao, cnpj="98765432000198")
     )
     repositorio_a.adicionar(_conta())
 
@@ -167,7 +167,7 @@ def test_lista_traz_o_codigo_do_pai(sessao):
 def test_lista_somente_contas_da_empresa(sessao):
     repositorio_a = RepositorioContaContabil(sessao, _nova_empresa(sessao))
     repositorio_b = RepositorioContaContabil(
-        sessao, _nova_empresa(sessao, cnpj="98765432000100")
+        sessao, _nova_empresa(sessao, cnpj="98765432000198")
     )
     repositorio_a.adicionar(_conta(codigo="1", nome="Ativo"))
     repositorio_b.adicionar(_conta(codigo="2", nome="Passivo"))
