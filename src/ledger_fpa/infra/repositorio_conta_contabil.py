@@ -1,7 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from ledger_fpa.domain.conta_contabil import ContaContabil
+from ledger_fpa.domain.conta_contabil import ContaContabil, TipoConta
 from ledger_fpa.infra.tabelas import ContaContabilTabela, EmpresaTabela
 
 
@@ -15,6 +15,10 @@ class CodigoContaJaCadastrado(Exception):
 
 class ContaPaiInexistente(Exception):
     """A conta pai informada não existe na empresa."""
+
+
+class PaiNaoSintetico(Exception):
+    """A conta pai informada não é sintética e não pode ter contas filhas."""
 
 
 class RepositorioContaContabil:
@@ -44,6 +48,8 @@ class RepositorioContaContabil:
             pai = self._buscar_tabela(conta.codigo_pai)
             if pai is None:
                 raise ContaPaiInexistente(conta.codigo_pai)
+            if pai.tipo is not TipoConta.SINTETICA:
+                raise PaiNaoSintetico(conta.codigo_pai)
             conta_pai_id = pai.id
 
         tabela = ContaContabilTabela(
