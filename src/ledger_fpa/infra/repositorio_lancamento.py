@@ -77,6 +77,16 @@ class RepositorioLancamento:
         cabecalho = self._buscar_tabela(lote)
         return self._montar(cabecalho) if cabecalho else None
 
+    def listar(self) -> list[Lancamento]:
+        """Lista os lançamentos da empresa, por data e lote."""
+        consulta = (
+            select(LancamentoTabela)
+            .where(LancamentoTabela.empresa_id == self._empresa_id)
+            .order_by(LancamentoTabela.data, LancamentoTabela.lote)
+        )
+        cabecalhos = self._sessao.scalars(consulta).all()
+        return [self._montar(cabecalho) for cabecalho in cabecalhos]
+
     def _conta_da_partida(self, partida: PartidaLancamento) -> ContaContabilTabela:
         codigo = partida.conta.codigo
         consulta = select(ContaContabilTabela).where(

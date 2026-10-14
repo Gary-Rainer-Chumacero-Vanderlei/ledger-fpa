@@ -260,3 +260,43 @@ def test_busca_nao_enxerga_lancamento_de_outra_empresa(sessao):
     repositorio_a.adicionar(_lancamento())
 
     assert repositorio_b.buscar_por_lote(1) is None
+
+
+def test_lista_devolve_os_lancamentos_com_as_partidas(sessao):
+    repositorio = RepositorioLancamento(sessao, _preparar(sessao))
+    primeiro = _lancamento(lote=1)
+    segundo = _lancamento(lote=2, historico="Outro histórico")
+    repositorio.adicionar(primeiro)
+    repositorio.adicionar(segundo)
+
+    assert repositorio.listar() == [primeiro, segundo]
+
+
+def test_lista_lancamentos_ordenados_por_data_e_lote(sessao):
+    repositorio = RepositorioLancamento(sessao, _preparar(sessao))
+    repositorio.adicionar(_lancamento(lote=3, data=date(2026, 10, 12)))
+    repositorio.adicionar(_lancamento(lote=1, data=date(2026, 10, 12)))
+    repositorio.adicionar(_lancamento(lote=2, data=date(2026, 10, 5)))
+
+    lotes = [lancamento.lote for lancamento in repositorio.listar()]
+
+    assert lotes == [2, 1, 3]
+
+
+def test_lista_somente_lancamentos_da_empresa(sessao):
+    repositorio_a = RepositorioLancamento(sessao, _preparar(sessao))
+    repositorio_b = RepositorioLancamento(
+        sessao, _preparar(sessao, cnpj="98765432000198")
+    )
+    repositorio_a.adicionar(_lancamento(lote=1))
+    repositorio_b.adicionar(_lancamento(lote=2))
+
+    lotes = [lancamento.lote for lancamento in repositorio_b.listar()]
+
+    assert lotes == [2]
+
+
+def test_lista_vazia_quando_nao_ha_lancamentos(sessao):
+    repositorio = RepositorioLancamento(sessao, _preparar(sessao))
+
+    assert repositorio.listar() == []
