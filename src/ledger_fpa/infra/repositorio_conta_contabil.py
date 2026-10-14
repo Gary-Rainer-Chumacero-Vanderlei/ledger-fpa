@@ -67,9 +67,18 @@ class RepositorioContaContabil:
 
     def buscar_por_codigo(self, codigo: str) -> ContaContabil | None:
         tabela = self._buscar_tabela(codigo)
-        if tabela is None:
-            return None
+        return self._traduzir(tabela) if tabela else None
 
+    def buscar_por_id(self, conta_id: int) -> ContaContabil | None:
+        """Busca uma conta pelo id, somente se pertencer à empresa."""
+        consulta = select(ContaContabilTabela).where(
+            ContaContabilTabela.empresa_id == self._empresa_id,
+            ContaContabilTabela.id == conta_id,
+        )
+        tabela = self._sessao.scalars(consulta).first()
+        return self._traduzir(tabela) if tabela else None
+
+    def _traduzir(self, tabela: ContaContabilTabela) -> ContaContabil:
         codigo_pai = None
         if tabela.conta_pai_id is not None:
             pai = self._sessao.get(ContaContabilTabela, tabela.conta_pai_id)
