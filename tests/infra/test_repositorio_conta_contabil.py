@@ -200,3 +200,39 @@ def test_conta_nao_e_gravada_quando_o_pai_e_analitico(sessao):
         repositorio.adicionar(_conta(codigo_pai="1.1.01"))
 
     assert repositorio.buscar_por_codigo("1.1.01.001") is None
+
+
+def test_busca_conta_por_id(sessao):
+    repositorio = RepositorioContaContabil(sessao, _nova_empresa(sessao))
+    conta_id = repositorio.adicionar(_conta())
+
+    assert repositorio.buscar_por_id(conta_id) == _conta()
+
+
+def test_busca_por_id_inexistente_devolve_none(sessao):
+    repositorio = RepositorioContaContabil(sessao, _nova_empresa(sessao))
+
+    assert repositorio.buscar_por_id(999) is None
+
+
+def test_busca_por_id_devolve_o_codigo_do_pai(sessao):
+    repositorio = RepositorioContaContabil(sessao, _nova_empresa(sessao))
+    repositorio.adicionar(
+        _conta(codigo="1.1.01", nome="Caixa", tipo=TipoConta.SINTETICA)
+    )
+    conta_id = repositorio.adicionar(_conta(codigo_pai="1.1.01"))
+
+    conta = repositorio.buscar_por_id(conta_id)
+
+    assert conta is not None
+    assert conta.codigo_pai == "1.1.01"
+
+
+def test_busca_por_id_nao_enxerga_conta_de_outra_empresa(sessao):
+    repositorio_a = RepositorioContaContabil(sessao, _nova_empresa(sessao))
+    repositorio_b = RepositorioContaContabil(
+        sessao, _nova_empresa(sessao, cnpj="98765432000198")
+    )
+    conta_id = repositorio_a.adicionar(_conta())
+
+    assert repositorio_b.buscar_por_id(conta_id) is None
