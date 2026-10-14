@@ -2,12 +2,6 @@ from datetime import date
 from decimal import Decimal
 
 import pytest
-from ledger_fpa.infra.repositorio_lancamento import (
-    ContaInexistente,
-    ContaNaoAnalitica,
-    LoteJaCadastrado,
-    RepositorioLancamento,
-)
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -21,6 +15,12 @@ from ledger_fpa.infra.repositorio_conta_contabil import (
     RepositorioContaContabil,
 )
 from ledger_fpa.infra.repositorio_empresa import RepositorioEmpresa
+from ledger_fpa.infra.repositorio_lancamento import (
+    ContaInexistente,
+    ContaNaoAnalitica,
+    LoteJaCadastrado,
+    RepositorioLancamento,
+)
 from ledger_fpa.infra.tabelas import Base, PartidaLancamentoTabela
 
 
