@@ -60,4 +60,6 @@ erDiagram
 - O CNPJ deve ter dígitos verificadores corretos (módulo 11, inclusive no formato alfanumérico). A regra é verificada no domínio.
 - O código da conta descende do código do pai (`1.1.01.001` sob `1.1.01`). A regra é verificada no domínio.
 - O pai de uma conta deve ser sintético. A regra é verificada no repositório, que consulta o tipo do pai.
+- A conta de cada partida deve existir na empresa do lançamento e ser analítica. A regra é verificada no repositório, lendo o banco.
+- O lançamento é gravado por inteiro ou não é gravado: o repositório verifica todas as regras antes de gravar qualquer linha.
 - Fora deste modelo: fechamento de período (M4), importação OFX (M5) e usuários (M8).
