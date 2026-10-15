@@ -1,6 +1,7 @@
 from datetime import date
 
 import pytest
+
 from ledger_fpa.domain.competencia import Competencia
 
 
