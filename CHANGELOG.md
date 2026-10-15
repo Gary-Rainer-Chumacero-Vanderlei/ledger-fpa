@@ -31,3 +31,6 @@ O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e 
 - Repositório de empresas (`RepositorioEmpresa`), que recusa CNPJ duplicado
 - Repositório de contas contábeis (`RepositorioContaContabil`), isolado por empresa, que recusa código duplicado, conta pai inexistente e conta pai que não seja sintética
 - Testes da validação do CNPJ e dos repositórios, com SQLite em memória (109 testes no total)
+- Busca de conta por id no repositório de contas
+- Repositório de lançamentos (`RepositorioLancamento`), isolado por empresa: grava o lançamento e as partidas em centavos, verifica tudo antes de gravar (empresa, lote, existência das contas e conta analítica conferida no banco), busca por lote e lista por data e lote
+- Testes do repositório de lançamentos, com SQLite em memória (133 testes no total)

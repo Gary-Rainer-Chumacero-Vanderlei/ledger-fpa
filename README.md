@@ -2,7 +2,7 @@
 
 Sistema de contabilidade e FP&A em Python: lançamentos, conciliação bancária, DRE e orçamento.
 
-> **Status:** em desenvolvimento inicial (v0.1.0). Os modelos de domínio, as tabelas do banco e os repositórios de empresas e contas estão implementados e testados. A persistência de lançamentos e a interface ainda não existem.
+> **Status:** em desenvolvimento inicial (v0.1.0). Os modelos de domínio, as tabelas do banco e os repositórios de empresas, contas e lançamentos estão implementados e testados. Fechamento de período, importação de extrato, conciliação, relatórios e interface ainda não existem.
 
 ## Funcionalidades planejadas
 
