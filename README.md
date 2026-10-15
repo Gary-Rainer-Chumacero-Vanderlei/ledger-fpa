@@ -68,7 +68,7 @@ ledger-fpa/
 
 O modelo de dados está documentado em [docs/modelo-dados.md](docs/modelo-dados.md).
 
-Decisões técnicas ficam registradas em [docs/adr](docs/adr): o [ADR 0001](docs/adr/0001-usar-sqlite-no-inicio.md) trata do uso de SQLite, o [ADR 0002](docs/adr/0002-guardar-valores-em-centavos.md) do armazenamento de valores em centavos e o [ADR 0003](docs/adr/0003-contrato-dos-repositorios.md) do contrato dos repositórios.
+Decisões técnicas ficam registradas em [docs/adr](docs/adr): o [ADR 0001](docs/adr/0001-usar-sqlite-no-inicio.md) trata do uso de SQLite, o [ADR 0002](docs/adr/0002-guardar-valores-em-centavos.md) do armazenamento de valores em centavos, o [ADR 0003](docs/adr/0003-contrato-dos-repositorios.md) do contrato dos repositórios e o [ADR 0004](docs/adr/0004-regra-do-periodo-fechado.md) da regra do período fechado.
 
 ## Licença
 
