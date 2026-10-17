@@ -59,3 +59,16 @@ class PartidaLancamentoTabela(Base):
     conta_id: Mapped[int] = mapped_column(ForeignKey("conta_contabil.id"))
     tipo: Mapped[TipoPartida] = mapped_column(Enum(TipoPartida))
     valor_centavos: Mapped[int]
+
+
+class FechamentoTabela(Base):
+    __tablename__ = "fechamento"
+    __table_args__ = (
+        CheckConstraint("ano BETWEEN 1 AND 9999"),
+        CheckConstraint("mes BETWEEN 1 AND 12"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    empresa_id: Mapped[int] = mapped_column(ForeignKey("empresa.id"), unique=True)
+    ano: Mapped[int]
+    mes: Mapped[int]
