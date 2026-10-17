@@ -1,8 +1,4 @@
 import pytest
-from ledger_fpa.infra.repositorio_fechamento import (
-    FechamentoForaDeSequencia,
-    RepositorioFechamento,
-)
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -11,6 +7,10 @@ from ledger_fpa.domain.empresa import Empresa
 from ledger_fpa.infra.banco import criar_engine
 from ledger_fpa.infra.repositorio_conta_contabil import EmpresaInexistente
 from ledger_fpa.infra.repositorio_empresa import RepositorioEmpresa
+from ledger_fpa.infra.repositorio_fechamento import (
+    FechamentoForaDeSequencia,
+    RepositorioFechamento,
+)
 from ledger_fpa.infra.tabelas import Base, FechamentoTabela
 
 
