@@ -2,7 +2,7 @@
 
 Sistema de contabilidade e FP&A em Python: lançamentos, conciliação bancária, DRE e orçamento.
 
-> **Status:** em desenvolvimento inicial (v0.1.0). Os modelos de domínio, as tabelas do banco e os repositórios de empresas, contas e lançamentos estão implementados e testados. Fechamento de período, importação de extrato, conciliação, relatórios e interface ainda não existem.
+> **Status:** em desenvolvimento inicial (v0.1.0). Os modelos de domínio, as tabelas do banco e os repositórios de empresas, contas, lançamentos e fechamento de período estão implementados e testados, inclusive o bloqueio de lançamentos em período fechado. Importação de extrato, conciliação, relatórios e interface ainda não existem.
 
 ## Funcionalidades planejadas
 
@@ -58,7 +58,7 @@ Todo trabalho é feito em uma branch e integrado por Pull Request. A `main` é p
 ```
 ledger-fpa/
 ├── src/ledger_fpa/     # código-fonte
-│   ├── domain/         # regras de negócio (empresa, conta, lançamento, CNPJ)
+│   ├── domain/         # regras de negócio (empresa, conta, lançamento, CNPJ, competência)
 │   ├── infra/          # tabelas, repositórios e conversão de valores
 │   └── ui/             # telas
 ├── tests/              # testes automatizados
