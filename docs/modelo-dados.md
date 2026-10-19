@@ -1,6 +1,6 @@
 # Modelo de dados
 
-Modelo entidade-relacionamento do módulo de contabilidade (milestone M1). Os valores monetários usam `Decimal`, nunca `float`.
+Modelo entidade-relacionamento do módulo de contabilidade (milestone M1 a M4). Os valores monetários usam `Decimal`, nunca `float`.
 
 ## Diagrama
 
@@ -11,6 +11,7 @@ erDiagram
     LANCAMENTO ||--|{ PARTIDA_LANCAMENTO : contem
     CONTA_CONTABIL ||--o{ PARTIDA_LANCAMENTO : recebe
     CONTA_CONTABIL |o--o{ CONTA_CONTABIL : "e pai de"
+    EMPRESA ||--o| FECHAMENTO : possui
 
     EMPRESA {
         int id PK
@@ -43,6 +44,13 @@ erDiagram
         string tipo
         int valor_centavos
     }
+
+        FECHAMENTO {
+        int id PK
+        int empresa_id FK
+        int ano
+        int mes
+    }
 ```
 
 ## Regras
@@ -62,4 +70,8 @@ erDiagram
 - O pai de uma conta deve ser sintético. A regra é verificada no repositório, que consulta o tipo do pai.
 - A conta de cada partida deve existir na empresa do lançamento e ser analítica. A regra é verificada no repositório, lendo o banco.
 - O lançamento é gravado por inteiro ou não é gravado: o repositório verifica todas as regras antes de gravar qualquer linha.
-- Fora deste modelo: fechamento de período (M4), importação OFX (M5) e usuários (M8).
+- A competência (ano e mês) é um objeto de domínio ordenável. No banco, o fechamento guarda `ano` (1 a 9999) e `mes` (1 a 12), com restrições de intervalo.
+- Cada empresa tem no máximo um registro de fechamento, com a última competência fechada (`empresa_id` único). Sem registro, nenhum período está fechado.
+- O primeiro fechamento da empresa pode ser de qualquer competência. Os seguintes só aceitam a competência imediatamente posterior. A regra é verificada no repositório de fechamento.
+- Um lançamento com data em competência igual ou anterior à última fechada é recusado, antes de gravar qualquer linha. A regra é verificada no repositório de lançamentos (ADR 0004).
+- Fora deste modelo: importação OFX (M5) e usuários (M8).
