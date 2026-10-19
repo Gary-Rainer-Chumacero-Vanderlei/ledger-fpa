@@ -1,6 +1,7 @@
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from ledger_fpa.domain.competencia import Competencia
 from ledger_fpa.domain.conta_contabil import TipoConta
 from ledger_fpa.domain.lancamento import Lancamento
 from ledger_fpa.domain.partida_lancamento import PartidaLancamento
@@ -9,6 +10,7 @@ from ledger_fpa.infra.repositorio_conta_contabil import (
     EmpresaInexistente,
     RepositorioContaContabil,
 )
+from ledger_fpa.infra.repositorio_fechamento import RepositorioFechamento
 from ledger_fpa.infra.tabelas import (
     ContaContabilTabela,
     EmpresaTabela,
@@ -29,6 +31,10 @@ class ContaNaoAnalitica(Exception):
     """A conta de uma partida não é analítica e não recebe lançamentos."""
 
 
+class PeriodoFechado(Exception):
+    """A data do lançamento está em uma competência já fechada."""
+
+
 class RepositorioLancamento:
     """Grava e busca lançamentos de uma empresa, com suas partidas.
 
@@ -40,11 +46,16 @@ class RepositorioLancamento:
         self._sessao = sessao
         self._empresa_id = empresa_id
         self._contas = RepositorioContaContabil(sessao, empresa_id)
+        self._fechamento = RepositorioFechamento(sessao, empresa_id)
 
     def adicionar(self, lancamento: Lancamento) -> int:
         """Grava o lançamento e as partidas, e devolve o id do lançamento."""
         if self._sessao.get(EmpresaTabela, self._empresa_id) is None:
             raise EmpresaInexistente(self._empresa_id)
+
+        competencia = Competencia.de_data(lancamento.data)
+        if self._fechamento.esta_fechada(competencia):
+            raise PeriodoFechado(str(competencia))
 
         if self._buscar_tabela(lancamento.lote) is not None:
             raise LoteJaCadastrado(lancamento.lote)
