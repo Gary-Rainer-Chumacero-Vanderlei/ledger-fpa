@@ -5,6 +5,7 @@ import pytest
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
+from ledger_fpa.domain.competencia import Competencia
 from ledger_fpa.domain.conta_contabil import ContaContabil, Natureza, TipoConta
 from ledger_fpa.domain.empresa import Empresa
 from ledger_fpa.domain.lancamento import Lancamento
@@ -15,10 +16,12 @@ from ledger_fpa.infra.repositorio_conta_contabil import (
     RepositorioContaContabil,
 )
 from ledger_fpa.infra.repositorio_empresa import RepositorioEmpresa
+from ledger_fpa.infra.repositorio_fechamento import RepositorioFechamento
 from ledger_fpa.infra.repositorio_lancamento import (
     ContaInexistente,
     ContaNaoAnalitica,
     LoteJaCadastrado,
+    PeriodoFechado,
     RepositorioLancamento,
 )
 from ledger_fpa.infra.tabelas import Base, PartidaLancamentoTabela
@@ -300,3 +303,63 @@ def test_lista_vazia_quando_nao_ha_lancamentos(sessao):
     repositorio = RepositorioLancamento(sessao, _preparar(sessao))
 
     assert repositorio.listar() == []
+
+
+@pytest.mark.parametrize(
+    "data",
+    [date(2026, 10, 1), date(2026, 10, 31), date(2026, 9, 30), date(2020, 1, 15)],
+)
+def test_rejeita_lancamento_em_periodo_fechado(sessao, data):
+    empresa_id = _preparar(sessao)
+    RepositorioFechamento(sessao, empresa_id).fechar(Competencia(2026, 10))
+    repositorio = RepositorioLancamento(sessao, empresa_id)
+
+    with pytest.raises(PeriodoFechado):
+        repositorio.adicionar(_lancamento(data=data))
+
+
+@pytest.mark.parametrize("data", [date(2026, 11, 1), date(2026, 12, 31)])
+def test_aceita_lancamento_depois_do_periodo_fechado(sessao, data):
+    empresa_id = _preparar(sessao)
+    RepositorioFechamento(sessao, empresa_id).fechar(Competencia(2026, 10))
+    repositorio = RepositorioLancamento(sessao, empresa_id)
+
+    lancamento_id = repositorio.adicionar(_lancamento(data=data))
+
+    assert isinstance(lancamento_id, int)
+
+
+def test_nada_e_gravado_quando_o_periodo_esta_fechado(sessao):
+    empresa_id = _preparar(sessao)
+    RepositorioFechamento(sessao, empresa_id).fechar(Competencia(2026, 10))
+    repositorio = RepositorioLancamento(sessao, empresa_id)
+
+    with pytest.raises(PeriodoFechado):
+        repositorio.adicionar(_lancamento(data=date(2026, 10, 10)))
+
+    assert repositorio.buscar_por_lote(1) is None
+    assert sessao.scalars(select(PartidaLancamentoTabela)).all() == []
+
+
+def test_fechamento_de_uma_empresa_nao_bloqueia_a_outra(sessao):
+    empresa_a = _preparar(sessao)
+    empresa_b = _preparar(sessao, cnpj="98765432000198")
+    RepositorioFechamento(sessao, empresa_a).fechar(Competencia(2026, 10))
+    repositorio_b = RepositorioLancamento(sessao, empresa_b)
+
+    lancamento_id = repositorio_b.adicionar(_lancamento(data=date(2026, 10, 10)))
+
+    assert isinstance(lancamento_id, int)
+
+
+def test_avancar_o_fechamento_passa_a_bloquear_o_mes(sessao):
+    empresa_id = _preparar(sessao)
+    fechamento = RepositorioFechamento(sessao, empresa_id)
+    repositorio = RepositorioLancamento(sessao, empresa_id)
+    fechamento.fechar(Competencia(2026, 9))
+    repositorio.adicionar(_lancamento(lote=1, data=date(2026, 10, 10)))
+
+    fechamento.fechar(Competencia(2026, 10))
+
+    with pytest.raises(PeriodoFechado):
+        repositorio.adicionar(_lancamento(lote=2, data=date(2026, 10, 20)))
