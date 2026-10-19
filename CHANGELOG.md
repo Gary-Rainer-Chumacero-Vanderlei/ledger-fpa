@@ -34,3 +34,10 @@ O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/) e 
 - Busca de conta por id no repositório de contas
 - Repositório de lançamentos (`RepositorioLancamento`), isolado por empresa: grava o lançamento e as partidas em centavos, verifica tudo antes de gravar (empresa, lote, existência das contas e conta analítica conferida no banco), busca por lote e lista por data e lote
 - Testes do repositório de lançamentos, com SQLite em memória (133 testes no total)
+- ADR 0003: contrato dos repositórios (sem `commit` nem `rollback`, verificação antes de gravar, erros do projeto)
+- ADR 0004: regra do período fechado
+- Modelo de competência (`Competencia`): mês contábil formado por ano e mês, ordenável, com conversão a partir de uma data e cálculo do mês seguinte
+- Tabela de fechamento, com no máximo um registro por empresa e limites para ano e mês
+- Repositório de fechamento (`RepositorioFechamento`): fechamento sequencial por empresa, com primeiro fechamento livre, consulta da última competência fechada e verificação de competência fechada
+- Bloqueio de lançamentos em período fechado: o repositório de lançamentos recusa datas em competência igual ou anterior à última fechada, antes de gravar
+- Testes do fechamento e do bloqueio (186 testes no total)
