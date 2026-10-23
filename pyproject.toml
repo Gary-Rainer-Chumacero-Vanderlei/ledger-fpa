@@ -14,6 +14,7 @@ authors = [
 ]
 dependencies = [
     "SQLAlchemy>=2.0,<3",
+    "ofxtools>=1.1,<2",
 ]
 
 [tool.setuptools.packages.find]
