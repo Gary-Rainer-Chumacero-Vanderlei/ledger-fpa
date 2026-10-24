@@ -2,6 +2,7 @@ from datetime import date, datetime
 from decimal import Decimal
 
 import pytest
+
 from ledger_fpa.domain.transacao_extrato import Sentido, TransacaoExtrato
 
 
