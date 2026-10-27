@@ -2,9 +2,9 @@ from datetime import date
 from decimal import Decimal
 
 import pytest
-from ledger_fpa.infra.leitor_ofx import ArquivoOfxInvalido, ler_extrato
 
 from ledger_fpa.domain.transacao_extrato import Sentido, TransacaoExtrato
+from ledger_fpa.infra.leitor_ofx import ArquivoOfxInvalido, ler_extrato
 
 CABECALHO = """OFXHEADER:100
 DATA:OFXSGML
