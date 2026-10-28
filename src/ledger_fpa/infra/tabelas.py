@@ -72,3 +72,17 @@ class FechamentoTabela(Base):
     empresa_id: Mapped[int] = mapped_column(ForeignKey("empresa.id"), unique=True)
     ano: Mapped[int]
     mes: Mapped[int]
+
+
+class TransacaoImportadaTabela(Base):
+    __tablename__ = "transacao_importada"
+    __table_args__ = (
+        UniqueConstraint("empresa_id", "conta_id", "identificador"),
+        CheckConstraint("length(identificador) > 0"),
+    )
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    empresa_id: Mapped[int] = mapped_column(ForeignKey("empresa.id"))
+    conta_id: Mapped[int] = mapped_column(ForeignKey("conta_contabil.id"))
+    lancamento_id: Mapped[int] = mapped_column(ForeignKey("lancamento.id"))
+    identificador: Mapped[str] = mapped_column(String(255))
