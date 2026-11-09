@@ -1,12 +1,6 @@
 from datetime import date
 
 import pytest
-from ledger_fpa.infra.repositorio_transacao_importada import (
-    ContaDoBancoInexistente,
-    LancamentoInexistente,
-    RepositorioTransacaoImportada,
-    TransacaoJaImportada,
-)
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
@@ -18,6 +12,12 @@ from ledger_fpa.infra.repositorio_conta_contabil import (
     RepositorioContaContabil,
 )
 from ledger_fpa.infra.repositorio_empresa import RepositorioEmpresa
+from ledger_fpa.infra.repositorio_transacao_importada import (
+    ContaDoBancoInexistente,
+    LancamentoInexistente,
+    RepositorioTransacaoImportada,
+    TransacaoJaImportada,
+)
 from ledger_fpa.infra.tabelas import Base, LancamentoTabela, TransacaoImportadaTabela
 
 
