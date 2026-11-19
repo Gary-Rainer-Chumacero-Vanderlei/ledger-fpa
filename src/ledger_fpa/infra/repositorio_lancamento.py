@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from ledger_fpa.domain.competencia import Competencia
@@ -97,6 +97,14 @@ class RepositorioLancamento:
         )
         cabecalhos = self._sessao.scalars(consulta).all()
         return [self._montar(cabecalho) for cabecalho in cabecalhos]
+
+    def proximo_lote(self) -> int:
+        """Devolve o próximo lote livre da empresa: o maior lote mais um."""
+        consulta = select(func.max(LancamentoTabela.lote)).where(
+            LancamentoTabela.empresa_id == self._empresa_id
+        )
+        maximo = self._sessao.scalar(consulta)
+        return (maximo or 0) + 1
 
     def _conta_da_partida(self, partida: PartidaLancamento) -> ContaContabilTabela:
         codigo = partida.conta.codigo
