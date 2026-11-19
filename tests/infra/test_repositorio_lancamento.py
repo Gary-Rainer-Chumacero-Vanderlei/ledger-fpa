@@ -363,3 +363,40 @@ def test_avancar_o_fechamento_passa_a_bloquear_o_mes(sessao):
 
     with pytest.raises(PeriodoFechado):
         repositorio.adicionar(_lancamento(lote=2, data=date(2026, 10, 20)))
+
+
+def test_proximo_lote_de_empresa_sem_lancamentos_e_um(sessao):
+    repositorio = RepositorioLancamento(sessao, _preparar(sessao))
+
+    assert repositorio.proximo_lote() == 1
+
+
+@pytest.mark.parametrize("lotes", [(1, 2), (1, 5), (5, 2), (7,)])
+def test_proximo_lote_e_o_maior_lote_mais_um(sessao, lotes):
+    repositorio = RepositorioLancamento(sessao, _preparar(sessao))
+    for lote in lotes:
+        repositorio.adicionar(_lancamento(lote=lote))
+
+    assert repositorio.proximo_lote() == max(lotes) + 1
+
+
+def test_cada_lancamento_gravado_avanca_o_proximo_lote(sessao):
+    repositorio = RepositorioLancamento(sessao, _preparar(sessao))
+
+    primeiro = repositorio.proximo_lote()
+    repositorio.adicionar(_lancamento(lote=primeiro))
+    segundo = repositorio.proximo_lote()
+    repositorio.adicionar(_lancamento(lote=segundo))
+
+    assert (primeiro, segundo, repositorio.proximo_lote()) == (1, 2, 3)
+
+
+def test_proximo_lote_considera_so_a_propria_empresa(sessao):
+    repositorio_a = RepositorioLancamento(sessao, _preparar(sessao))
+    repositorio_b = RepositorioLancamento(
+        sessao, _preparar(sessao, cnpj="98765432000198")
+    )
+    repositorio_a.adicionar(_lancamento(lote=9))
+
+    assert repositorio_a.proximo_lote() == 10
+    assert repositorio_b.proximo_lote() == 1
