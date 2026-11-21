@@ -78,6 +78,11 @@ class RepositorioContaContabil:
         tabela = self._sessao.scalars(consulta).first()
         return self._traduzir(tabela) if tabela else None
 
+    def buscar_id_por_codigo(self, codigo: str) -> int | None:
+        """Devolve o id da conta com o código, ou None se não existir na empresa."""
+        tabela = self._buscar_tabela(codigo)
+        return tabela.id if tabela else None
+
     def _traduzir(self, tabela: ContaContabilTabela) -> ContaContabil:
         codigo_pai = None
         if tabela.conta_pai_id is not None:
