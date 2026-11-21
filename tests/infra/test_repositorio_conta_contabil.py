@@ -236,3 +236,49 @@ def test_busca_por_id_nao_enxerga_conta_de_outra_empresa(sessao):
     conta_id = repositorio_a.adicionar(_conta())
 
     assert repositorio_b.buscar_por_id(conta_id) is None
+
+
+def test_busca_o_id_da_conta_pelo_codigo(sessao):
+    repositorio = RepositorioContaContabil(sessao, _nova_empresa(sessao))
+    conta_id = repositorio.adicionar(_conta())
+
+    assert repositorio.buscar_id_por_codigo("1.1.01.001") == conta_id
+
+
+def test_o_id_devolvido_encontra_a_mesma_conta(sessao):
+    repositorio = RepositorioContaContabil(sessao, _nova_empresa(sessao))
+    repositorio.adicionar(_conta())
+
+    conta_id = repositorio.buscar_id_por_codigo("1.1.01.001")
+
+    assert conta_id is not None
+    assert repositorio.buscar_por_id(conta_id) == _conta()
+
+
+def test_busca_de_id_por_codigo_inexistente_devolve_none(sessao):
+    repositorio = RepositorioContaContabil(sessao, _nova_empresa(sessao))
+
+    assert repositorio.buscar_id_por_codigo("9.9") is None
+
+
+def test_busca_de_id_nao_enxerga_conta_de_outra_empresa(sessao):
+    repositorio_a = RepositorioContaContabil(sessao, _nova_empresa(sessao))
+    repositorio_b = RepositorioContaContabil(
+        sessao, _nova_empresa(sessao, cnpj="98765432000198")
+    )
+    repositorio_a.adicionar(_conta())
+
+    assert repositorio_b.buscar_id_por_codigo("1.1.01.001") is None
+
+
+def test_o_mesmo_codigo_em_empresas_diferentes_tem_ids_diferentes(sessao):
+    repositorio_a = RepositorioContaContabil(sessao, _nova_empresa(sessao))
+    repositorio_b = RepositorioContaContabil(
+        sessao, _nova_empresa(sessao, cnpj="98765432000198")
+    )
+    id_a = repositorio_a.adicionar(_conta())
+    id_b = repositorio_b.adicionar(_conta())
+
+    assert repositorio_a.buscar_id_por_codigo("1.1.01.001") == id_a
+    assert repositorio_b.buscar_id_por_codigo("1.1.01.001") == id_b
+    assert id_a != id_b
